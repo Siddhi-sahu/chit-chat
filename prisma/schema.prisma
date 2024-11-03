@@ -27,6 +27,8 @@ model Message {
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
+  // receiverId Int
+  // readreceipt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 }
