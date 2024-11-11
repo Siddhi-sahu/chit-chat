@@ -13,6 +13,7 @@ interface SocketProviderProps {
 interface ISocketContext {
     //gives us a msg of type string and return us anything
     sendMessage: (msg: string) => any;
+    messages: string[]
 }
 const SocketContext = React.createContext<ISocketContext | null>(null);
 
@@ -25,7 +26,8 @@ export const useSocket = () => {
 }
 
 export const SockerProvider: React.FC<SocketProviderProps> = ({ children }) => {
-    const [socket, setSocket] = useState<Socket>()
+    const [socket, setSocket] = useState<Socket>();
+    const [messages, setMessages] = useState<string[]>([])
 
 
     //implementation of sending a messsage
@@ -38,7 +40,9 @@ export const SockerProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }, [socket]);
 
     const onMessageRec = useCallback((msg: string) => {
-        console.log("From server message recieved", msg)
+        console.log("From server message recieved", msg);
+        const { message } = JSON.parse(msg) as { message: string };
+        setMessages((prev) => [...prev, message]);
     }, []);
 
     useEffect(() => {
@@ -53,7 +57,7 @@ export const SockerProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
         }
     }, [])
-    return <SocketContext.Provider value={{ sendMessage }}>
+    return <SocketContext.Provider value={{ sendMessage, messages }}>
         {children}
 
     </SocketContext.Provider>

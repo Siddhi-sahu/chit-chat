@@ -6,15 +6,13 @@ import { useState } from "react";
 
 
 export default function Home() {
-  const { sendMessage } = useSocket();
+  const { sendMessage, messages } = useSocket();
   const [messsage, setMessage] = useState('');
   return (
     <div>
       {/* landing page for non-signined users and redirection logic for signined users */}
       <Appbar />
-      <div>
-        All Messages will appear here
-      </div>
+
       <div>
         <input onChange={(e) => {
           setMessage(e.target.value)
@@ -22,6 +20,11 @@ export default function Home() {
         <button onClick={(e) => {
           sendMessage(messsage)
         }} className="w-12 h-11 p-2 rounded-lg bg-slate-200 text-black">Send</button>
+      </div>
+      <div>
+        <div>
+          {messages.map((e) => <li>{e}</li>)}
+        </div>
       </div>
     </div>
   );
