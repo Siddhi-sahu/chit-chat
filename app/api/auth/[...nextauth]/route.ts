@@ -1,10 +1,9 @@
 import prisma from "@/lib/db";
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
 // import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions = NextAuth({
     providers: [
         // CredentialsProvider({
         //     name: 'Credentials',
@@ -24,6 +23,7 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? ""
         })
     ],
+    //TODO: add user to db
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async signIn(params) {
@@ -45,6 +45,9 @@ const handler = NextAuth({
             }
 
             return true;
+        },
+        async redirect({ url, baseUrl }) {
+            return `${baseUrl}/dashboard`;
         }
     }
 });
