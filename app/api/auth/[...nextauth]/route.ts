@@ -32,19 +32,23 @@ export const authOptions: NextAuthOptions = {
             }
 
             try {
-                const existingUser = prisma.user.findUnique({
+                const existingUser = await prisma.user.findUnique({
                     where: { email: user.email }
+
                 })
                 if (!existingUser) {
 
                     await prisma.user.create({
                         data: {
                             email: user.email,
+                            name: user.name ?? "Anonymous",
+                            id: Number(user.id),
                             provider: "Google"
 
                         }
                     })
                 }
+                console.log(user.name)
 
             } catch (e) {
                 console.log(e);

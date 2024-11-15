@@ -18,6 +18,7 @@ datasource db {
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
+  name     String
   provider Provider
   password String?
   messages Message[]
