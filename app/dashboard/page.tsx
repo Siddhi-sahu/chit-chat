@@ -1,6 +1,5 @@
 "use client"
 
-import { Appbar } from "@/components/Appbar";
 import { useSocket } from "@/context/SocketProvider";
 import { useState } from "react";
 

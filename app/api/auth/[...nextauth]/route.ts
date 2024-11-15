@@ -1,9 +1,9 @@
 import prisma from "@/lib/db";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 // import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-const authOptions = NextAuth({
+export const authOptions: NextAuthOptions = {
     providers: [
         // CredentialsProvider({
         //     name: 'Credentials',
@@ -26,30 +26,38 @@ const authOptions = NextAuth({
     //TODO: add user to db
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async signIn(params) {
-            if (!params.user.email) {
+        async signIn({ user }) {
+            if (!user.email) {
                 return false
             }
 
             try {
-                await prisma.user.create({
-                    data: {
-                        email: params.user.email,
-                        provider: "Google"
-
-                    }
+                const existingUser = prisma.user.findUnique({
+                    where: { email: user.email }
                 })
+                if (!existingUser) {
+
+                    await prisma.user.create({
+                        data: {
+                            email: user.email,
+                            provider: "Google"
+
+                        }
+                    })
+                }
 
             } catch (e) {
-                console.log(e)
+                console.log(e);
+                return false;
             }
 
             return true;
-        },
-        async redirect({ url, baseUrl }) {
-            return `${baseUrl}/dashboard`;
         }
-    }
-});
+        // async redirect({ url, baseUrl }) {
+        //     return `${baseUrl}/dashboard`;
+        // }
 
-export { authOptions as GET, authOptions as POST };
+    }
+};
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
