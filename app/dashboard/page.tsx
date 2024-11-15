@@ -1,5 +1,6 @@
 "use client"
 
+import { Appbar } from "@/components/Appbar";
 import { useSocket } from "@/context/SocketProvider";
 import { useState } from "react";
 
@@ -7,6 +8,7 @@ export default function Dashboard() {
     const { sendMessage, messages } = useSocket();
     const [messsage, setMessage] = useState('');
     return <div>
+
         <div>
             <input onChange={(e) => {
                 setMessage(e.target.value)

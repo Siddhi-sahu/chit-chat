@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import { SockerProvider } from "@/context/SocketProvider";
+import { Appbar } from "@/components/Appbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <SockerProvider>
 
           <Providers>
+            <Appbar />
 
             {children}
           </Providers>

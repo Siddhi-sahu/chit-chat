@@ -1,21 +1,9 @@
-// "use client"
 
-// import { signIn, signOut } from "next-auth/react";
-
-// export const Appbar = () => {
-//     return (
-//         <div>
-
-//             <button onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>Signin</button>
-//             <button onClick={() => signOut()}>signOut</button>
-//         </div>
-//     )
-// }
 
 
 "use client"
 
-import { signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export const Appbar = () => {
@@ -24,11 +12,19 @@ export const Appbar = () => {
     const handleSignIn = () => {
         router.push('/api/auth/signin');
     };
+    const session = useSession();
 
     return (
-        <div>
-            <button onClick={handleSignIn}>Signin</button>
-            <button onClick={() => signOut()}>signOut</button>
+        <div className="flex justify-between">
+            <div>
+                Chit-Chat
+            </div>
+
+            <div>
+                {session.data?.user && <button onClick={() => signOut()}>LogOut</button>}
+                {!session.data?.user && <button onClick={handleSignIn}>Signin</button>}
+
+            </div>
         </div>
     );
 };
