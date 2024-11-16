@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
-import { SockerProvider } from "@/context/SocketProvider";
+import { SocketProvider } from "@/context/SocketProvider";
 import { Appbar } from "@/components/Appbar";
+import { SessionProvider } from "next-auth/react";
+import ClientWrapper from "@/components/ClientWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,14 +33,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SockerProvider>
+
+
+        <ClientWrapper>
 
           <Providers>
             <Appbar />
 
             {children}
+
           </Providers>
-        </SockerProvider>
+        </ClientWrapper>
+
       </body>
     </html>
   );

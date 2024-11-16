@@ -1,7 +1,8 @@
 "use client"
 
 
-//simplest way possible
+
+import { useSession } from "next-auth/react";
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { io, Socket } from "socket.io-client"
 
@@ -25,7 +26,8 @@ export const useSocket = () => {
     return state
 }
 
-export const SockerProvider: React.FC<SocketProviderProps> = ({ children }) => {
+export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+    const { data: session } = useSession()
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<string[]>([])
 
@@ -33,9 +35,14 @@ export const SockerProvider: React.FC<SocketProviderProps> = ({ children }) => {
     //implementation of sending a messsage
 
     const sendMessage: ISocketContext["sendMessage"] = useCallback((msg) => {
-        console.log("Send Message", msg);
+        if (!session?.user?.id) {
+            console.error("unauthenticated user: ");
+            return
+        }
+        const userId = session.user.id;
+        console.log("Send Message", msg, userId);
         if (socket) {
-            socket.emit("event:message", { message: msg })
+            socket.emit("event:message", { message: msg, userId })
         }
     }, [socket]);
 
